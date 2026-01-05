@@ -1,21 +1,39 @@
 #include<bits/stdc++.h>
 using namespace std;
-long long n,m,k;
-vector<pair<long long,long long>> adj_list[100005];
-long long dist[100005];
-void bfs(int start,int end){
-    
-}
 int main(){
+    long long n,m,k;
     cin>>n>>m>>k;
-    for(int i=1;i<=m;i++){
+    vector<vector<pair<long long,long long>>> adj(n+1);
+
+    for(long long i=0;i<m;i++){
         long long a,b,c;
         cin>>a>>b>>c;
-        adj_list[a].push_back({b,c});
+        adj[a].push_back({b,c});
     }
-    for(int i=1;i<=n;i++){
-        dist[i]=LLONG_MAX;
-    }
-    bfs(1,n);
 
+    priority_queue<pair<long long,long long>> pq;
+    vector<long long> vis(n+1,0);
+
+    pq.push({0,1});
+
+    while(!pq.empty() && vis[n]<k){
+        auto node=pq.top().second;
+        auto distance=pq.top().first;
+        pq.pop();
+        
+        vis[node]++;
+        
+        if(node==n){
+            cout<<-distance<<" ";
+        }
+        
+        if(vis[node]<=k){
+            for(auto edge:adj[node]){
+                auto child_node=edge.first;
+                auto child_weight=edge.second;
+                pq.push({distance-child_weight,child_node});
+            }
+        }
+    }
+    cout<<endl;
 }

@@ -4,14 +4,14 @@ long long n,m;
 vector<pair<long long,long long>> adj_list[100005];
 long long dist[100005];
 bool visited[100005];
-
+ 
 void dijkstra(long long source){
     priority_queue<pair<long long,long long>,vector<pair<long long,long long>>,greater<pair<long long,long long>>>pq;
     pq.push({0,source});
     while(!pq.empty()){
         pair<long long,long long> front=pq.top();
         pq.pop();
-
+ 
         long long weight=front.first;
         long long node=front.second;
         
@@ -28,7 +28,7 @@ void dijkstra(long long source){
         }
     }
 }
-
+ 
 int main(){
     cin>>n>>m;
     for(long long i=1;i<=m;i++){
