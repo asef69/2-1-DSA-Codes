@@ -35,53 +35,53 @@ struct Edge {
     bool inMST = false;
 };
 
-vector<vector<pair<int,long long>>> tree;
+vector<vector<pair<int,long long>>> mstTree;
 
-bool dfs(int u, int t, int p, long long &mx) {
-    if (u == t) return true;
-    for (auto [v,w] : tree[u]) {
-        if (v == p) continue;
-        long long prev = mx;
-        mx = max(mx, w);
-        if (dfs(v, t, u, mx)) return true;
-        mx = prev;
+bool findPathAndMaxWeight(int currentNode, int targetNode, int parentNode, long long &maxWeight) {
+    if (currentNode == targetNode) return true;
+    for (auto [nextNode, edgeWeight] : mstTree[currentNode]) {
+        if (nextNode == parentNode) continue;
+        long long previousMax = maxWeight;
+        maxWeight = max(maxWeight, edgeWeight);
+        if (findPathAndMaxWeight(nextNode, targetNode, currentNode, maxWeight)) return true;
+        maxWeight = previousMax;
     }
     return false;
 }
 
 int main() {
-    int N, M;
-    cin >> N >> M;
-    vector<Edge> edges(M);
+    int numNodes, numEdges;
+    cin >> numNodes >> numEdges;
+    vector<Edge> edges(numEdges);
     for (auto &e : edges) cin >> e.u >> e.v >> e.w;
 
     sort(edges.begin(), edges.end(),
          [](auto &a, auto &b){ return a.w < b.w; });
 
-    DSU dsu(N);
+    DSU dsu(numNodes);
     long long mstCost = 0;
-    tree.assign(N, {});
+    mstTree.assign(numNodes, {});
 
-    vector<bool> used(M,false);
+    vector<bool> inMST(numEdges, false);
 
-    for (int i = 0; i < M; i++) {
+    for (int i = 0; i < numEdges; i++) {
         if (dsu.unite(edges[i].u, edges[i].v)) {
             mstCost += edges[i].w;
-            used[i] = true;
-            tree[edges[i].u].push_back({edges[i].v, edges[i].w});
-            tree[edges[i].v].push_back({edges[i].u, edges[i].w});
+            inMST[i] = true;
+            mstTree[edges[i].u].push_back({edges[i].v, edges[i].w});
+            mstTree[edges[i].v].push_back({edges[i].u, edges[i].w});
         }
     }
 
-    long long second = LLONG_MAX;
-    for (int i = 0; i < M; i++) {
-        if (used[i]) continue;
-        long long mx = 0;
-        dfs(edges[i].u, edges[i].v, -1, mx);
-        second = min(second, mstCost + edges[i].w - mx);
+    long long secondBestMSTCost = LLONG_MAX;
+    for (int i = 0; i < numEdges; i++) {
+        if (inMST[i]) continue;
+        long long maxWeightInPath = 0;
+        findPathAndMaxWeight(edges[i].u, edges[i].v, -1, maxWeightInPath);
+        secondBestMSTCost = min(secondBestMSTCost, mstCost + edges[i].w - maxWeightInPath);
     }
 
     cout << mstCost << "\n";
-    if (second == LLONG_MAX) cout << -1 << "\n";
-    else cout << second << "\n";
+    if (secondBestMSTCost == LLONG_MAX) cout << -1 << "\n";
+    else cout << secondBestMSTCost << "\n";
 }
