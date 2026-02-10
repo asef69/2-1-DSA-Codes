@@ -113,7 +113,7 @@ protected:
     int deletionSinceCompaction;
 
 public:
-    HashTableBase(const string &hasFunc = "hash1") : tableSize(INITIAL_TABLE_SIZE), numElements(0), hasFuncName(hasFunc), collisionCount(0), searchHits(0), insertionSinceExpansion(0), deletionSinceCompaction(0) {}
+    HashTableBase(const string &hasFunc = "hash1") : tableSize(INITIAL_TABLE_SIZE), numElements(0), hasFuncName(hasFunc), collisionCount(0), searchHits(0),searchCount(0), insertionSinceExpansion(0), deletionSinceCompaction(0) {}
     virtual ~HashTableBase() {}
     int hash1(const string &key) const
     {
@@ -142,7 +142,7 @@ public:
         if (hasFuncName == "hash1")
             return hash1(key);
         else
-            hash2(key);
+            return hash2(key);
     }
     int auxHash(const string &key) const
     {
