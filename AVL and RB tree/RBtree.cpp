@@ -17,7 +17,7 @@ public:
     RBNode *right;
     RBNode *parent;
     int size;
-    
+
     RBNode(T k) : key(k), color(RED), left(NULL), right(NULL), parent(NULL), size(1) {}
 };
 
@@ -27,12 +27,12 @@ class RBTree
 private:
     RBNode<T> *root;
     RBNode<T> *NIL;
-    
+
     int getSize(RBNode<T> *Node)
     {
         return (Node == NULL || Node == NIL) ? 0 : Node->size;
     }
-    
+
     void updateSize(RBNode<T> *Node)
     {
         if (Node != NIL)
@@ -40,7 +40,7 @@ private:
             Node->size = 1 + getSize(Node->left) + getSize(Node->right);
         }
     }
-    
+
     void rotateLeft(RBNode<T> *x)
     {
         RBNode<T> *y = x->right;
@@ -69,7 +69,7 @@ private:
         updateSize(x);
         updateSize(y);
     }
-    
+
     void rotateRight(RBNode<T> *y)
     {
         RBNode<T> *x = y->left;
@@ -97,7 +97,7 @@ private:
         updateSize(y);
         updateSize(x);
     }
-    
+
     void insertWithColor(RBNode<T> *z)
     {
         while (z->parent->color == RED)
@@ -149,7 +149,7 @@ private:
         }
         root->color = BLACK;
     }
-    
+
     void transplant(RBNode<T> *u, RBNode<T> *v)
     {
         if (u->parent == NIL)
@@ -166,7 +166,7 @@ private:
         }
         v->parent = u->parent;
     }
-    
+
     RBNode<T> *minimum(RBNode<T> *Node)
     {
         while (Node->left != NIL)
@@ -175,7 +175,7 @@ private:
         }
         return Node;
     }
-    
+
     void deleteWithColor(RBNode<T> *x)
     {
         while (x != root && x->color == BLACK)
@@ -245,7 +245,7 @@ private:
         }
         x->color = BLACK;
     }
-    
+
     RBNode<T> *searchNode(RBNode<T> *Node, T key)
     {
         if (Node == NIL || Node->key == key)
@@ -258,7 +258,7 @@ private:
         }
         return searchNode(Node->right, key);
     }
-    
+
     void destroyTree(RBNode<T> *Node)
     {
         if (Node != NIL)
@@ -278,13 +278,13 @@ public:
         NIL->left = NIL->right = NIL->parent = NIL;
         root = NIL;
     }
-    
+
     ~RBTree()
     {
         destroyTree(root);
         delete NIL;
     }
-    
+
     bool insert(T key)
     {
         if (searchNode(root, key) != NIL)
@@ -332,7 +332,7 @@ public:
         insertWithColor(z);
         return true;
     }
-    
+
     bool remove(T key)
     {
         RBNode<T> *z = searchNode(root, key);
@@ -406,12 +406,12 @@ public:
         }
         return true;
     }
-    
+
     bool search(T key)
     {
         return searchNode(root, key) != NIL;
     }
-    
+
     int countLess(T key)
     {
         int count = 0;
@@ -437,35 +437,43 @@ int main()
 {
     ifstream infile("input.txt");
     ofstream outfile("output.txt");
-    
+
     int n;
     infile >> n;
-    
+
     outfile << n << endl;
-    
+
     RBTree<int> tree;
-    
-    for (int i = 0; i < n; i++) {
+
+    for (int i = 0; i < n; i++)
+    {
         int e, x;
         infile >> e >> x;
-        
-        if (e == 0) {
+
+        if (e == 0)
+        {
             bool result = tree.remove(x);
             outfile << e << " " << x << " " << (result ? 1 : 0) << endl;
-        } else if (e == 1) {
+        }
+        else if (e == 1)
+        {
             bool result = tree.insert(x);
             outfile << e << " " << x << " " << (result ? 1 : 0) << endl;
-        } else if (e == 2) {
+        }
+        else if (e == 2)
+        {
             bool result = tree.search(x);
             outfile << e << " " << x << " " << (result ? 1 : 0) << endl;
-        } else if (e == 3) {
+        }
+        else if (e == 3)
+        {
             int count = tree.countLess(x);
             outfile << e << " " << x << " " << count << endl;
         }
     }
-    
+
     infile.close();
     outfile.close();
-    
+
     return 0;
 }
